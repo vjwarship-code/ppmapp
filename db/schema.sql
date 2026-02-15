@@ -165,8 +165,8 @@ CREATE POLICY "Admins can view all users" ON public.users
 CREATE POLICY "Users can update their own profile" ON public.users
   FOR UPDATE USING (auth.uid() = id);
 
-CREATE POLICY "Users can insert their own profile" ON public.users
-  FOR INSERT WITH CHECK (auth.uid() = id);
+-- Note: User profiles are created automatically via trigger on auth.users
+-- This policy is intentionally removed to prevent client-side inserts
 
 -- Portfolios policies
 CREATE POLICY "Users can view portfolios they have access to" ON public.portfolios
@@ -439,6 +439,26 @@ CREATE POLICY "Authorized users can manage milestones" ON public.milestones
   );
 
 -- ===== FUNCTIONS AND TRIGGERS =====
+
+-- Function to automatically create user profile when auth user is created
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.users (id, email, name, role)
+  VALUES (
+    NEW.id,
+    NEW.email,
+    COALESCE(NEW.raw_user_meta_data->>'name', 'User'),
+    COALESCE(NEW.raw_user_meta_data->>'role', 'viewer')
+  );
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger to create user profile on auth user creation
+CREATE OR REPLACE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- Function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()

@@ -12,27 +12,20 @@ export async function signIn(email: string, password: string) {
 }
 
 export async function signUp(email: string, password: string, name: string, role: string = 'viewer') {
-  // First create the auth user
+  // Create the auth user with metadata
+  // The trigger will automatically create the user profile in public.users
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      data: {
+        name,
+        role,
+      },
+    },
   });
 
   if (authError) throw authError;
-
-  // Then create the user profile
-  if (authData.user) {
-    const { error: profileError } = await supabase
-      .from('users')
-      .insert({
-        id: authData.user.id,
-        email,
-        name,
-        role,
-      });
-
-    if (profileError) throw profileError;
-  }
 
   return authData;
 }
