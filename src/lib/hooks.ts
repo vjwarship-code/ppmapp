@@ -171,8 +171,6 @@ export function useCreatePortfolio() {
         console.error('No authenticated user found in useCreatePortfolio');
         throw new Error('You must be logged in to create a portfolio');
       }
-
-      console.log('Creating portfolio with user:', user.id);
       
       const { data, error } = await supabase
         .from('portfolios')
