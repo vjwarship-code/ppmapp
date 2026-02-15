@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { LoadingPage } from '@/components/ui/loading';
 import { PortfolioTable } from '@/components/portfolios/portfolio-table';
 import { PortfolioForm } from '@/components/portfolios/portfolio-form';
-import type { Portfolio } from '@/lib/types';
+import type { Portfolio, PortfolioFormData } from '@/lib/types';
 
 export default function PortfoliosPage() {
   const [showForm, setShowForm] = useState(false);
@@ -39,7 +39,7 @@ export default function PortfoliosPage() {
     }
   };
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: PortfolioFormData) => {
     try {
       if (editingPortfolio) {
         await updatePortfolio.mutateAsync({ id: editingPortfolio.id, ...data });

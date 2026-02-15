@@ -6,11 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import type { Portfolio } from '@/lib/types';
+import type { Portfolio, PortfolioFormData } from '@/lib/types';
 
 interface PortfolioFormProps {
   portfolio?: Portfolio;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: PortfolioFormData) => void;
   onCancel: () => void;
 }
 
