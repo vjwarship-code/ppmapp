@@ -158,15 +158,38 @@ export function useCreatePortfolio() {
 
   return useMutation({
     mutationFn: async (portfolio: Partial<Portfolio>) => {
-      const { data: { user } } = await supabase.auth.getUser();
+      // Get the authenticated user
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
+      // Check if user is authenticated
+      if (authError) {
+        console.error('Authentication error in useCreatePortfolio:', authError);
+        throw new Error(`Authentication failed: ${authError.message}`);
+      }
+      
+      if (!user) {
+        console.error('No authenticated user found in useCreatePortfolio');
+        throw new Error('You must be logged in to create a portfolio');
+      }
+
+      console.log('Creating portfolio with user:', user.id);
       
       const { data, error } = await supabase
         .from('portfolios')
-        .insert({ ...portfolio, owner_id: user?.id })
+        .insert({ ...portfolio, owner_id: user.id })
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error in useCreatePortfolio:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code,
+        });
+        throw new Error(error.message || 'Failed to create portfolio');
+      }
+      
       return data;
     },
     onSuccess: () => {

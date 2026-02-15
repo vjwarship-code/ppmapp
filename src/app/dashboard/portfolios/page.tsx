@@ -34,7 +34,23 @@ export default function PortfoliosPage() {
         await deletePortfolio.mutateAsync(id);
       } catch (error) {
         console.error('Error deleting portfolio:', error);
-        alert('Failed to delete portfolio. Please try again.');
+        
+        // Extract meaningful error message
+        let errorMessage = 'Failed to delete portfolio. Please try again.';
+        
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        } else if (typeof error === 'object' && error !== null) {
+          // Handle Supabase error object
+          const supabaseError = error as { message?: string; error_description?: string };
+          if (supabaseError.message) {
+            errorMessage = supabaseError.message;
+          } else if (supabaseError.error_description) {
+            errorMessage = supabaseError.error_description;
+          }
+        }
+        
+        alert(`Error: ${errorMessage}`);
       }
     }
   };
@@ -50,7 +66,23 @@ export default function PortfoliosPage() {
       setEditingPortfolio(undefined);
     } catch (error) {
       console.error('Error saving portfolio:', error);
-      alert('Failed to save portfolio. Please try again.');
+      
+      // Extract meaningful error message
+      let errorMessage = 'Failed to save portfolio. Please try again.';
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'object' && error !== null) {
+        // Handle Supabase error object
+        const supabaseError = error as { message?: string; error_description?: string };
+        if (supabaseError.message) {
+          errorMessage = supabaseError.message;
+        } else if (supabaseError.error_description) {
+          errorMessage = supabaseError.error_description;
+        }
+      }
+      
+      alert(`Error: ${errorMessage}`);
     }
   };
 
