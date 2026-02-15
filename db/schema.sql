@@ -165,6 +165,9 @@ CREATE POLICY "Admins can view all users" ON public.users
 CREATE POLICY "Users can update their own profile" ON public.users
   FOR UPDATE USING (auth.uid() = id);
 
+CREATE POLICY "Users can insert their own profile" ON public.users
+  FOR INSERT WITH CHECK (auth.uid() = id);
+
 -- Portfolios policies
 CREATE POLICY "Users can view portfolios they have access to" ON public.portfolios
   FOR SELECT USING (
