@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { usePortfolios, useCreatePortfolio, useUpdatePortfolio, useDeletePortfolio } from '@/lib/hooks';
+import { extractErrorMessage } from '@/lib/utils';
 import { Navigation } from '@/components/navigation';
 import { Button } from '@/components/ui/button';
 import { LoadingPage } from '@/components/ui/loading';
@@ -34,7 +35,7 @@ export default function PortfoliosPage() {
         await deletePortfolio.mutateAsync(id);
       } catch (error) {
         console.error('Error deleting portfolio:', error);
-        alert('Failed to delete portfolio. Please try again.');
+        alert(`Error: ${extractErrorMessage(error, 'Failed to delete portfolio. Please try again.')}`);
       }
     }
   };
@@ -50,7 +51,7 @@ export default function PortfoliosPage() {
       setEditingPortfolio(undefined);
     } catch (error) {
       console.error('Error saving portfolio:', error);
-      alert('Failed to save portfolio. Please try again.');
+      alert(`Error: ${extractErrorMessage(error, 'Failed to save portfolio. Please try again.')}`);
     }
   };
 
