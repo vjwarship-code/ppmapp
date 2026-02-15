@@ -442,7 +442,11 @@ CREATE POLICY "Authorized users can manage milestones" ON public.milestones
 
 -- Function to automatically create user profile when auth user is created
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
 BEGIN
   INSERT INTO public.users (id, email, name, role)
   VALUES (
@@ -450,10 +454,11 @@ BEGIN
     NEW.email,
     COALESCE(NEW.raw_user_meta_data->>'name', 'User'),
     COALESCE(NEW.raw_user_meta_data->>'role', 'viewer')
-  );
+  )
+  ON CONFLICT (id) DO NOTHING;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 -- Trigger to create user profile on auth user creation
 CREATE OR REPLACE TRIGGER on_auth_user_created
