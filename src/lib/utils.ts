@@ -135,3 +135,19 @@ export function calculateTotalAllocation(allocations: any[]): number {
 export function isOverAllocated(totalAllocation: number, availabilityPercent: number = 100): boolean {
   return totalAllocation > availabilityPercent;
 }
+
+// Extract error message from various error types
+export function extractErrorMessage(error: unknown, defaultMessage: string = 'An error occurred'): string {
+  if (error instanceof Error) {
+    return error.message;
+  } else if (typeof error === 'object' && error !== null) {
+    // Handle Supabase error object
+    const supabaseError = error as { message?: string; error_description?: string };
+    if (supabaseError.message) {
+      return supabaseError.message;
+    } else if (supabaseError.error_description) {
+      return supabaseError.error_description;
+    }
+  }
+  return defaultMessage;
+}
