@@ -210,7 +210,16 @@ export function useUpdatePortfolio() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error in useUpdatePortfolio:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code,
+        });
+        throw new Error(error.message || 'Failed to update portfolio');
+      }
+      
       return data;
     },
     onSuccess: () => {
@@ -229,7 +238,15 @@ export function useDeletePortfolio() {
         .delete()
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error in useDeletePortfolio:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code,
+        });
+        throw new Error(error.message || 'Failed to delete portfolio');
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['portfolios'] });
