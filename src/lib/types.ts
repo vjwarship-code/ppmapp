@@ -138,6 +138,11 @@ export interface ProjectWithDetails extends Project {
 }
 
 // Form Types
+export interface PortfolioFormData {
+  name: string;
+  description: string;
+}
+
 export interface ProjectFormData {
   name: string;
   description: string;

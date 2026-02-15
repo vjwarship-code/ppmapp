@@ -153,6 +153,67 @@ export function usePortfolios() {
   });
 }
 
+export function useCreatePortfolio() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (portfolio: Partial<Portfolio>) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      const { data, error } = await supabase
+        .from('portfolios')
+        .insert({ ...portfolio, owner_id: user?.id })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['portfolios'] });
+    },
+  });
+}
+
+export function useUpdatePortfolio() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, ...portfolio }: Partial<Portfolio> & { id: string }) => {
+      const { data, error } = await supabase
+        .from('portfolios')
+        .update(portfolio)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['portfolios'] });
+    },
+  });
+}
+
+export function useDeletePortfolio() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('portfolios')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['portfolios'] });
+    },
+  });
+}
+
 // ===== BUDGET ENTRIES =====
 
 export function useBudgetEntries(projectId?: string) {

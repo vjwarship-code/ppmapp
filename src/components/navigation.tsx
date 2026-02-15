@@ -25,6 +25,9 @@ export function Navigation() {
               <Link href="/dashboard" className="text-sm font-medium hover:text-blue-600">
                 Dashboard
               </Link>
+              <Link href="/dashboard/portfolios" className="text-sm font-medium hover:text-blue-600">
+                Portfolios
+              </Link>
               <Link href="/dashboard/projects" className="text-sm font-medium hover:text-blue-600">
                 Projects
               </Link>
