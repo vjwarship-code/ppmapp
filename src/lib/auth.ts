@@ -11,17 +11,36 @@ export async function signIn(email: string, password: string) {
 }
 
 export async function signUp(email: string, password: string, name: string, role: string = 'viewer') {
+  // 1. Create the auth user
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { name, role, },
+      data: { name, role },
     },
   });
+
   if (authError) throw authError;
+
+  // 2. Wait for auth to complete
   if (authData.user?.id) {
     await new Promise(resolve => setTimeout(resolve, 500));
+
+    // 3. Manually insert into public.users (bypass trigger issues)
+    const { error: insertError } = await supabase
+      .from('users')
+      .insert({
+        id: authData.user.id,
+        email: authData.user.email,
+        name,
+        role,
+      });
+
+    if (insertError && insertError.code !== '23505') {
+      throw insertError;
+    }
   }
+
   return authData;
 }
 
