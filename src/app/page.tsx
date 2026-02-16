@@ -1,16 +1,19 @@
-'use client';
-
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { LoadingPage } from '@/components/ui/loading';
+import { useRouter } from 'next/router';
 
-export default function Home() {
-  const router = useRouter();
+const Page = () => {
+    const router = useRouter();
 
-  useEffect(() => {
-    // Redirect to dashboard by default
-    router.push('/dashboard');
-  }, [router]);
+    useEffect(() => {
+        const isAuthenticated = false; // Replace with actual authentication logic
+        if (isAuthenticated) {
+            router.push('/dashboard');
+        } else {
+            router.push('/login');
+        }
+    }, [router]);
 
-  return <LoadingPage />;
-}
+    return <div>Loading...</div>;
+};
+
+export default Page;
