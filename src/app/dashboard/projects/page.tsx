@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useProjects, usePortfolios, useCreateProject, useUpdateProject, useDeleteProject, useUsers } from '@/lib/hooks';
+import { supabase } from '@/lib/supabase';
 import { Navigation } from '@/components/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,15 +24,20 @@ export default function ProjectsPage() {
   });
   const { data: portfolios = [] } = usePortfolios();
   const { data: users = [] } = useUsers();
-  const { data: users = [] } = useUsers();
 
-// 🔍 DEBUG - Add these lines
-console.log('Users array:', users);
-console.log('Users length:', users?.length);
-if (users && users.length > 0) {
-  console.log('First user:', users[0]);
-  console.log('First user ID:', users[0]?.id);
-}
+  // 🔍 TEST SUPABASE FETCH
+  useEffect(() => {
+    const testFetch = async () => {
+      console.log('🔍 Testing Supabase users fetch...');
+      const { data, error } = await supabase
+        .from('users')
+        .select('*');
+      console.log('🔍 Supabase data:', data);
+      console.log('🔍 Supabase error:', error);
+    };
+    testFetch();
+  }, []);
+
   const createProject = useCreateProject();
   const updateProject = useUpdateProject();
   const deleteProject = useDeleteProject();
