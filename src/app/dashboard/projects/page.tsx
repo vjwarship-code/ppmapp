@@ -23,7 +23,15 @@ export default function ProjectsPage() {
   });
   const { data: portfolios = [] } = usePortfolios();
   const { data: users = [] } = useUsers();
-  
+  const { data: users = [] } = useUsers();
+
+// 🔍 DEBUG - Add these lines
+console.log('Users array:', users);
+console.log('Users length:', users?.length);
+if (users && users.length > 0) {
+  console.log('First user:', users[0]);
+  console.log('First user ID:', users[0]?.id);
+}
   const createProject = useCreateProject();
   const updateProject = useUpdateProject();
   const deleteProject = useDeleteProject();
