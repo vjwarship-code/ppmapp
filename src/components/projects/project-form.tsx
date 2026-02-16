@@ -175,22 +175,25 @@ export function ProjectForm({ project, portfolios, users, onSubmit, onCancel }: 
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="owner_id">Owner *</Label>
-              <Select
-                id="owner_id"
-                value={formData.owner_id}
-                onChange={(e) => setFormData({ ...formData, owner_id: e.target.value })}
-              >
-                <option value="">Select owner</option>
-                {users.map((u) => (
-                  <option key={u.id} value={u.id}>
-                    {u.name}
-                  </option>
-                ))}
-              </Select>
-              {errors.owner_id && <p className="text-sm text-red-600">{errors.owner_id}</p>}
-            </div>
-          </div>
+  <Label htmlFor="owner_id">Owner *</Label>
+  <Select
+    id="owner_id"
+    value={formData.owner_id}
+    onChange={(e) => setFormData({ ...formData, owner_id: e.target.value })}
+  >
+    <option value="">Select owner</option>
+    {users && users.length > 0 ? (
+      users.map((u) => (
+        <option key={u.id} value={u.id}>
+          {u.name}
+        </option>
+      ))
+    ) : (
+      <option disabled>No users available</option>
+    )}
+  </Select>
+  {errors.owner_id && <p className="text-sm text-red-600">{errors.owner_id}</p>}
+</div>
 
           <div className="flex gap-2 justify-end">
             <Button type="button" variant="outline" onClick={onCancel}>
