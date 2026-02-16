@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { User } from '@/lib/types';
-import { UserCircle, Mail, Shield } from 'react-icons/all';
+import { FaUser, FaEnvelope, FaShieldAlt } from 'react-icons/fa';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -48,7 +48,7 @@ export default function LoginPage() {
           <CardContent className="pt-6">
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                <UserCircle size={32} color="#2563eb" />
+                <FaUser size={24} color="#2563eb" />
               </div>
               <div>
                 <h2 className="text-xl font-semibold text-gray-900">Welcome back! 👋</h2>
@@ -57,11 +57,11 @@ export default function LoginPage() {
               
               <div className="w-full bg-gray-50 rounded-lg p-3 space-y-2 text-left">
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Mail size={16} />
+                  <FaEnvelope size={14} />
                   <span>{user.email}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Shield size={16} />
+                  <FaShieldAlt size={14} />
                   <span className="capitalize">{user.role.replace('_', ' ')}</span>
                 </div>
               </div>
